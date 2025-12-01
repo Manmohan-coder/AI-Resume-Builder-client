@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { dummyResumeData } from './../assets/assets';
-import { ArrowLeftIcon, Briefcase, ChevronLeft, FileText, FolderIcon, GraduationCap, Sparkles, User } from 'lucide-react';
-
+import { ArrowLeftIcon, Briefcase, ChevronLeft, ChevronRight, FileText, FolderIcon, GraduationCap, Sparkles, User } from 'lucide-react';
+import PersonalInfoForm from '../components/PersonalInfoForm';
 
 const ResumeBuilder = () => {
     const { resumeId } = useParams();
@@ -20,18 +20,21 @@ const ResumeBuilder = () => {
         public: false,
         createdAt: '',
         updatedAt: ''
-    })
+    });
 
+    // Ensure the resume is loaded by its _id correctly and set the document title
     const loadExistingResume = async () => {
-        const resume = dummyResumeData.find(resume => resume.id === resumeId)
+        const resume = dummyResumeData.find(resume => resume._id === resumeId);
         if (resume) {
-            setResumeData(resume)
-            document.title = `Editing Resume - ${resume.title}`
+            setResumeData(resume);
+            document.title = `Editing Resume - ${resume.title}`;
         }
-    }
-    const [activeSectionIndex, setActiveSectionIndex] = useState('personal_info');
+    };
+
+    const [activeSectionIndex, setActiveSectionIndex] = useState(0);
     const [removeBackground, setRemoveBackground] = useState(false);
 
+    // Sections for the builder wizard
     const sections = [
         { id: 'personal_info', title: 'Personal Information', icon: User },
         { id: 'summary', title: 'Summary', icon: FileText },
@@ -41,15 +44,17 @@ const ResumeBuilder = () => {
         { id: 'skills', title: 'Skills', icon: Sparkles }
     ];
 
-    const activeSection = Selection[activeSectionIndex]
+    const activeSection = sections[activeSectionIndex];
 
+    // Load resume on mount or when resumeId changes
     useEffect(() => {
         if (resumeId) {
             loadExistingResume();
         } else {
-            document.title = 'Create New Resume'
+            document.title = 'Create New Resume';
         }
-    }, [resumeId])
+    }, [resumeId]);
+
     return (
         <div>
             <div className='max-w-7xl mx-auto px-4 py-6'>
@@ -59,37 +64,64 @@ const ResumeBuilder = () => {
             </div>
             <div className='max-w-7xl mx-auto px-4 pb-8'>
                 <div className='grid lg:grid-cols-12 gap-8'>
-                    {/* left pannel form */}
+                    {/* left panel form */}
                     <div className='relative lg:col-span-5 rounded-lg overflow-hidden'>
                         <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 pt-1'>
                             <hr className='absolute top-0 left-0 right-0 border-2 border-gray-200' />
-                            <hr className='absolute top-0 left-0 h-1 bg-gradient-to-r from-green-500 to-green-600 border-none transition-all duration-2000' style={{ width: `${activeSectionIndex * 100 / (sections.length - 1)}%` }} />
+                            <hr
+                                className='absolute top-0 left-0 h-1 bg-gradient-to-r from-green-500 to-green-600 border-none transition-all duration-2000'
+                                style={{
+                                    width: `${activeSectionIndex * 100 / (sections.length - 1)}%`
+                                }}
+                            />
                             {/* section Navigation */}
                             <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-1">
-                                <div>
-
-                                </div>
+                                <div></div>
                                 <div className="flex items-center">
                                     {activeSectionIndex !== 0 && (
                                         <button
-                                            className="flex items-center gap-1 p-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all">
+                                            onClick={() => setActiveSectionIndex((prevIndex) => Math.max(prevIndex - 1, 0))}
+                                            className="flex items-center gap-1 p-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all"
+                                            disabled={activeSectionIndex === 0}
+                                        >
                                             <ChevronLeft className='size-4' /> Previous
                                         </button>
                                     )}
+                                    <button
+                                        onClick={() => setActiveSectionIndex((prevIndex) => Math.min(prevIndex + 1, sections.length - 1))}
+                                        className={`flex items-center gap-1 p-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all ${activeSectionIndex === sections.length - 1 ? 'opacity-50' : ''}`}
+                                        disabled={activeSectionIndex === sections.length - 1}
+                                    >
+                                        Next <ChevronRight className='size-4' />
+                                    </button>
                                 </div>
+                            </div>
+                            {/* Form content */}
+                            <div className='space-y-6'>
+                                {activeSection.id === 'personal_info' && (
+                                    <PersonalInfoForm
+                                        data={resumeData.personal_info}
+                                        onChange={(data) => setResumeData(prev => ({ ...prev, personal_info: data }))}
+                                        removeBackground={removeBackground}
+                                        setRemoveBackground={setRemoveBackground}
+                                    />
+                                )}
+                                {/* Render other section forms based on activeSection.id if needed */}
                             </div>
                         </div>
                     </div>
-                    {/* right pannel form */}
-                    <div>
-                        Right Pannel Form
+
+                    {/* right panel form */}
+                    <div className='lg:col-span-7 max-lg:mt-6'>
+                        <div>
+                            {/* buttons */}
+                        </div>
+                        {/* This space is reserved for preview resume*/}
                     </div>
                 </div>
-
             </div>
-
         </div>
-    )
-}
+    );
+};
 
 export default ResumeBuilder
