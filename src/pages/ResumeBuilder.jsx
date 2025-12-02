@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom'
 import { dummyResumeData } from './../assets/assets';
 import { ArrowLeftIcon, Briefcase, ChevronLeft, ChevronRight, FileText, FolderIcon, GraduationCap, Sparkles, User } from 'lucide-react';
 import PersonalInfoForm from '../components/PersonalInfoForm';
+import ResumePreview from '../components/ResumePreview';
+import TemplateSelector from '../components/TemplateSelector';
 
 const ResumeBuilder = () => {
     const { resumeId } = useParams();
@@ -76,7 +78,9 @@ const ResumeBuilder = () => {
                             />
                             {/* section Navigation */}
                             <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-1">
-                                <div></div>
+                                <div>
+                                    <TemplateSelector />
+                                </div>
                                 <div className="flex items-center">
                                     {activeSectionIndex !== 0 && (
                                         <button
@@ -117,6 +121,10 @@ const ResumeBuilder = () => {
                             {/* buttons */}
                         </div>
                         {/* This space is reserved for preview resume*/}
+                        <ResumePreview
+                            data={resumeData}
+                            template={resumeData.templates}
+                            accentColor={resumeData.accent_color} />
                     </div>
                 </div>
             </div>

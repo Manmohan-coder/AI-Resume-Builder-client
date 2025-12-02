@@ -1,8 +1,7 @@
-import React from 'react';
 import ClassicTemplate from './templates/ClassicTemplate';
 import ModernTemplate from './templates/ModernTemplate';
-import CreativeTemplate from './templates/CreativeTemplate';
-import MinimalImageTemplate from './../assets/templates/MinimalImageTemplate';
+import MinimalTemplate from './templates/MinimalTemplate';
+import MinimalImageTemplate from './templates/MinimalImageTemplate';
 
 // ResumePreview displays the selected resume template.
 // The 'data' prop supplies resume information, 'template' selects the visual style,
@@ -12,8 +11,8 @@ const ResumePreview = ({ data, template, removeBackground, classes = "" }) => {
         switch (template) {
             case 'modern':
                 return <ModernTemplate data={data} removeBackground={removeBackground} />;
-            case 'creative':
-                return <CreativeTemplate data={data} removeBackground={removeBackground} />;
+            case 'minimal':
+                return <MinimalTemplate data={data} removeBackground={removeBackground} />;
             case 'minimal-image':
                 return <MinimalImageTemplate data={data} removeBackground={removeBackground} />;
             default:
