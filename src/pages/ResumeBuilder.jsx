@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { dummyResumeData } from './../assets/assets';
 import { ArrowLeftIcon, Briefcase, ChevronLeft, ChevronRight, FileText, FolderIcon, GraduationCap, Sparkles, User } from 'lucide-react';
 import PersonalInfoForm from '../components/PersonalInfoForm';
 import ResumePreview from '../components/ResumePreview';
 import TemplateSelector from '../components/TemplateSelector';
+import ColorPicker from '../components/ColorPicker';
+import SummaryForm from '../components/SummaryForm';
 
 const ResumeBuilder = () => {
     const { resumeId } = useParams();
@@ -78,8 +80,14 @@ const ResumeBuilder = () => {
                             />
                             {/* section Navigation */}
                             <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-1">
-                                <div>
-                                    <TemplateSelector />
+                                <div className='flex items-center gap-2'>
+                                    <TemplateSelector
+                                        selectedTemplate={resumeData.templates}
+                                        onChange={(template) => setResumeData(prev => ({ ...prev, templates: template }))}
+                                    />
+                                    <ColorPicker
+                                        selectedColor={resumeData.accent_color}
+                                        onChange={(color) => setResumeData(prev => ({ ...prev, accent_color: color }))} />
                                 </div>
                                 <div className="flex items-center">
                                     {activeSectionIndex !== 0 && (
@@ -111,6 +119,12 @@ const ResumeBuilder = () => {
                                     />
                                 )}
                                 {/* Render other section forms based on activeSection.id if needed */}
+                                {activeSection.id !== 'summary' && (
+                                    <SummaryForm 
+                                    data={resumeData.summary} 
+                                    onChange={(data) => setResumeData(prev => ({ ...prev, summary: data }))} 
+                                    setResumeData={setResumeData} />
+                                )}
                             </div>
                         </div>
                     </div>

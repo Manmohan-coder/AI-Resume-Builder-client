@@ -15,7 +15,7 @@ const TemplateSelector = ({ selectedTemplate, onChange }) => {
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-1 text-blue-600 bg-gradient-to-br from-blue-50 to-blue-100 ring-blue-300 hover:ring transition-all text-sm px-3 py-2 rounded-lg border border-gray-300 w-full text-left bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-                {templates.find(t => t.id === selectedTemplate)?.name || 'Select Template'}
+                {/* {templates.find(t => t.id === selectedTemplate)?.name || 'Select Template'} */}
                 <Layout className='size-4 inline-block ml-2' />
                 <span className='max-sm:hidden'>Template</span>
             </button>
@@ -25,8 +25,7 @@ const TemplateSelector = ({ selectedTemplate, onChange }) => {
                         <div
                             key={template.id}
                             onClick={() => { onChange(template.id); setIsOpen(false); }}
-                            className={`relative p-3 border rounded-md cursor-pointer transition-all ${selectedTemplate === template.id ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'}`}
-                        >
+                            className={`relative p-3 border rounded-md cursor-pointer transition-all ${selectedTemplate === template.id ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'}`}>
                             {selectedTemplate === template.id && (
                                 <div className="absolute top-2 right-2">
                                     <div className='size-5 bg-blue-400 rounded-full flex items-center justify-center'>
