@@ -5,19 +5,19 @@ import MinimalImageTemplate from './templates/MinimalImageTemplate';
 
 // ResumePreview displays the selected resume template.
 // The 'data' prop supplies resume information, 'template' selects the visual style,
-// 'accentColor' customizes highlight colors,
 // and 'removeBackground' is passed to templates supporting image background processing.
-const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
+const ResumePreview = ({ data, template, removeBackground, classes = "" }) => {
+    const accentColor = data?.accent_color || "#3B82F6";
     const renderTemplate = () => {
         switch (template) {
             case 'modern':
-                return <ModernTemplate data={data} accentColor={accentColor} />;
+                return <ModernTemplate data={data} accentColor={accentColor} removeBackground={removeBackground} />;
             case 'minimal':
-                return <MinimalTemplate data={data} accentColor={accentColor} />;
+                return <MinimalTemplate data={data} accentColor={accentColor} removeBackground={removeBackground} />;
             case 'minimal-image':
-                return <MinimalImageTemplate data={data} accentColor={accentColor} />;
+                return <MinimalImageTemplate data={data} accentColor={accentColor} removeBackground={removeBackground} />;
             default:
-                return <ClassicTemplate data={data} accentColor={accentColor} />;
+                return <ClassicTemplate data={data} accentColor={accentColor} removeBackground={removeBackground} />;
         }
     };
 

@@ -7,6 +7,10 @@ import ResumePreview from '../components/ResumePreview';
 import TemplateSelector from '../components/TemplateSelector';
 import ColorPicker from '../components/ColorPicker';
 import SummaryForm from '../components/SummaryForm';
+import ExperienceForm from './../components/ExperienceForm';
+import EducationForm from './../components/EducationForm';
+import ProjectForm from './../components/ProjectForm';
+import SkillsForm from '../components/SkillsForm';
 
 const ResumeBuilder = () => {
     const { resumeId } = useParams();
@@ -14,26 +18,17 @@ const ResumeBuilder = () => {
         _id: '',
         title: '',
         personal_info: {},
-        summary: '',
+        professional_summary: '',
         experience: [],
         education: [],
         project: [],
         skills: [],
-        templates: 'classic',
+        template: 'classic',
         accent_color: '#3B82F6',
         public: false,
         createdAt: '',
         updatedAt: ''
     });
-
-    // Ensure the resume is loaded by its _id correctly and set the document title
-    const loadExistingResume = async () => {
-        const resume = dummyResumeData.find(resume => resume._id === resumeId);
-        if (resume) {
-            setResumeData(resume);
-            document.title = `Editing Resume - ${resume.title}`;
-        }
-    };
 
     const [activeSectionIndex, setActiveSectionIndex] = useState(0);
     const [removeBackground, setRemoveBackground] = useState(false);
@@ -53,7 +48,11 @@ const ResumeBuilder = () => {
     // Load resume on mount or when resumeId changes
     useEffect(() => {
         if (resumeId) {
-            loadExistingResume();
+            const resume = dummyResumeData.find(resume => resume._id === resumeId);
+            if (resume) {
+                setResumeData(resume);
+                document.title = `Editing Resume - ${resume.title}`;
+            }
         } else {
             document.title = 'Create New Resume';
         }
@@ -82,8 +81,8 @@ const ResumeBuilder = () => {
                             <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-1">
                                 <div className='flex items-center gap-2'>
                                     <TemplateSelector
-                                        selectedTemplate={resumeData.templates}
-                                        onChange={(template) => setResumeData(prev => ({ ...prev, templates: template }))}
+                                        selectedTemplate={resumeData.template}
+                                        onChange={(templateId) => setResumeData(prev => ({ ...prev, template: templateId }))}
                                     />
                                     <ColorPicker
                                         selectedColor={resumeData.accent_color}
@@ -118,12 +117,35 @@ const ResumeBuilder = () => {
                                         setRemoveBackground={setRemoveBackground}
                                     />
                                 )}
-                                {/* Render other section forms based on activeSection.id if needed */}
-                                {activeSection.id !== 'summary' && (
-                                    <SummaryForm 
-                                    data={resumeData.summary} 
-                                    onChange={(data) => setResumeData(prev => ({ ...prev, summary: data }))} 
-                                    setResumeData={setResumeData} />
+                                {activeSection.id === 'summary' && (
+                                    <SummaryForm
+                                        data={resumeData.professional_summary}
+                                        onChange={(data) => setResumeData(prev => ({ ...prev, professional_summary: data }))}
+                                    />
+                                )}
+                                {activeSection.id === 'experience' && (
+                                    <ExperienceForm
+                                        data={resumeData.experience}
+                                        onChange={(data) => setResumeData(prev => ({ ...prev, experience: data }))}
+                                    />
+                                )}
+                                {activeSection.id === 'education' && (
+                                    <EducationForm
+                                        data={resumeData.education}
+                                        onChange={(data) => setResumeData(prev => ({ ...prev, education: data }))}
+                                    />
+                                )}
+                                {activeSection.id === 'project' && (
+                                    <ProjectForm
+                                        data={resumeData.project}
+                                        onChange={(data) => setResumeData(prev => ({ ...prev, project: data }))}
+                                    />
+                                )}
+                                {activeSection.id === 'skills' && (
+                                    <SkillsForm
+                                        data={resumeData.skills}
+                                        onChange={(data) => setResumeData(prev => ({ ...prev, skills: data }))}
+                                    />
                                 )}
                             </div>
                         </div>
@@ -137,8 +159,9 @@ const ResumeBuilder = () => {
                         {/* This space is reserved for preview resume*/}
                         <ResumePreview
                             data={resumeData}
-                            template={resumeData.templates}
-                            accentColor={resumeData.accent_color} />
+                            template={resumeData.template}
+                            accentColor={resumeData.accent_color}
+                            removeBackground={removeBackground} />
                     </div>
                 </div>
             </div>
